@@ -1,0 +1,139 @@
+{
+  "sites": {
+    "user": [
+    ],
+    "default": [
+      {
+        "url": "http://abcnews.go.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.aljazeera.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.bbc.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.bloomberg.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.breitbart.com",
+        "checked": ""
+      },
+      {
+        "url": "http://www.cbsnews.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.chron.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.cnbc.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.cnn.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.drudgereport.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.foxnews.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.indiatimes.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.latimes.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://money.cnn.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.msnbc.com",
+        "checked": "true"
+      },
+      {
+        "url": "https://www.nationalgeographic.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.nbcnews.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.news.yahoo.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.news.google.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.nypost.com",
+        "checked": "true"
+      },
+      {
+        "url": "https://www.nytimes.com",
+        "checked": ""
+      },
+      {
+        "url": "http://www.reddit.com",
+        "checked": ""
+      },
+      {
+        "url": "http://www.reuters.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.shareblue.com",
+        "checked": ""
+      },
+      {
+        "url": "http://www.theatlantic.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.theguardian.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.thehill.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.time.com",
+        "checked": "true"
+      },
+      {
+        "url": "https://www.usatoday.com",
+        "checked": "true"
+      },
+      {
+        "url": "https://www.usnews.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.washingtonpost.com",
+        "checked": ""
+      },
+      {
+        "url": "https://www.wsj.com",
+        "checked": "true"
+      }
+    ]
+  },
+  "enabled": "Enabled",
+  "blockStreams": false,
+  "userSitePreset": "wikipedia.org/wiki/Special:Random"
+}

@@ -1,0 +1,33 @@
+<!doctype html>
+<head>
+  <title>Noiszy News (Alpha)</title>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script>
+      $(function () {
+          $("#content").load("/ajax/news");
+      });
+  </script>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='news.css') }}">
+</head>
+
+  <body>
+
+  <h1>Noiszy News (Alpha)</h1>
+
+    <div id="description">
+      A pseudo-random sampling of stories from news sites, unfiltered & unpersonalized.<br>
+      (Better description to come...)
+
+    </div>
+
+    <div id="content">
+
+      <div id="loading">
+        Loading scraped news stories...this may take awhile.<br>
+        <img src="/static/imgs/loading.gif">
+      </div>
+
+    </div>
+
+  </body>

@@ -1,0 +1,75 @@
+{
+  "sites": {
+    "user": [
+    ],
+    "default": [
+      {
+        "url": "http://www.bbc.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.bloomberg.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.breitbart.com",
+        "checked": ""
+      },
+      {
+        "url": "http://www.cbsnews.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.chron.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.cnn.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.drudgereport.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.foxnews.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.indiatimes.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.latimes.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://money.cnn.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.msnbc.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.nbcnews.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.news.yahoo.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.reuters.com",
+        "checked": "true"
+      },
+      {
+        "url": "http://www.thehill.com",
+        "checked": "true"
+      }
+    ]
+  },
+  "enabled": "Enabled",
+  "blockStreams": false,
+  "userSitePreset": "wikipedia.org/wiki/Special:Random"
+}

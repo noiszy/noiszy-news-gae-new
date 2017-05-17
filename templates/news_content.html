@@ -1,0 +1,22 @@
+
+  {% if news %}
+
+
+    {% for item in news %}
+        <p>
+<!--        Here's an item:<br>
+            {{ item.title }}<br>
+            {{ item.url }}
+-->
+          <a href="{{ item.url }}">
+              <span class="href-site">{{ item.site }}</span><br>
+              <span class="href-title">{{ item.page_title }}</span><br>
+              <span class="href-destination">{{ item.url }}</span>
+          </a>
+        </p>
+    {% endfor %}
+    </div>
+
+{% else %}
+  <h1>Hello, World! It's news.html.</h1>
+{% endif %}
