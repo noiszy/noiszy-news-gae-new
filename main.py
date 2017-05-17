@@ -7,12 +7,20 @@ import sys
 import re
 import random
 
+
 # from google.appengine.api import urlfetch
 
 from lxml import html
 # from lxml.cssselect import CSSSelector
 
 import requests
+# import requests_toolbelt.adapters.appengine
+#
+# # Use the App Engine Requests adapter. This makes sure that Requests uses
+# # URLFetch.
+# requests_toolbelt.adapters.appengine.monkeypatch()
+
+
 import json
 import time
 
@@ -317,7 +325,9 @@ def streamed_response(number_of_results=12):
                                 print "YIELD NOW"
                                 print
                                 print
+
                                 yield render_template('news_item.html', item=item)
+
                                 print
                                 print
                                 print "YIELDED"
