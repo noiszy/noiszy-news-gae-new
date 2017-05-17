@@ -191,7 +191,9 @@ def stream():
 
 
 @app.route('/stream')
-def streamed_response():
+@app.route('/stream/<number_of_results>')
+
+def streamed_response(number_of_results=12):
     print "in streamed_response"
     def generate():
         # yield 'Hello '
@@ -221,15 +223,20 @@ def streamed_response():
         print "starting ajax_news"
 
         # Setup...
-        num_results = 12  # number of results to display
+        # num_results = 12  # number of results to display
+        num_results = int(number_of_results)  # number of results to display
         all_results = []  # objects to hold results
         item = []  # objects to hold results
         count = 0  # counter
+
+        print "number of results: %s" % number_of_results
 
         while count < num_results:
 
             print "-------"
             print "starting outer loop"
+            print "count: %s" % count
+            print "num_results: %s" % num_results
             print
 
             # Pick one (homepage) at random, store as current_site and current_page
