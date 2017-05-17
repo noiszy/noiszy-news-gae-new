@@ -1,4 +1,4 @@
-from flask import Flask, Response, request
+from flask import Flask, Response, request, stream_with_context
 
 from flask import render_template
 
@@ -46,8 +46,9 @@ def generate_loop(times):
         time.sleep(1)
         yield "<br>{i}: hi fancypants  ".format(i=i)
         # yield "something"
-    with app.app_context():
-        yield render_template('loop_test.html',message="a message")
+        with app.app_context():
+            yield render_template('loop_test.html',message="a message")
+
 
 @app.route('/longloop/<int:times>')
 def longloop(times):
@@ -171,18 +172,221 @@ def get_random_homepage(exclude=None):
 
 
 
+def stream():
+    print "in stream()"
+
+    # with app.app_context():
+    def f():
+        print "with app.app_context"
+        yield render_template('news2_header.html')
+        print "yielded"
+
+        print "generate_ajax()"
+        yield generate_ajax()
+
+        yield render_template('news2_footer.html')
+
+    return Response(stream_with_context(f()))
+
+
+
+@app.route('/stream')
+def streamed_response():
+    print "in streamed_response"
+    def generate():
+        # yield 'Hello '
+        # # yield request.args['name']
+        # yield '!'
+        print "in generate()"
+
+        yield render_template('news2_header.html')
+        print "yielded"
+
+        print "generate_ajax()"
+        # yield generate_ajax()
+
+
+
+
+
+
+
+        # @app.stream_with_context
+        # def generate():
+        #     yield 'Hello '
+        #     yield flask.request.args['name']
+        #     yield '!'
+        # return flask.Response(generate())
+
+        print "starting ajax_news"
+
+        # Setup...
+        num_results = 12  # number of results to display
+        all_results = []  # objects to hold results
+        item = []  # objects to hold results
+        count = 0  # counter
+
+        while count < num_results:
+
+            print "-------"
+            print "starting outer loop"
+            print
+
+            # Pick one (homepage) at random, store as current_site and current_page
+            print "calling get_random_homepage()"
+
+            current_site = get_random_homepage()
+            current_page = current_site
+
+            # Get a random URL from that page to work with, assign to new_url
+            new_url = get_random_url_from_page(current_site, current_page)
+            # print("new_url: ",new_url)
+
+            # if
+            if new_url:
+                print "was able to get a url from the page"
+
+                # Internal loop from here...
+                site_page_count = 1
+                # while site_page_count < 4 and count < num_results:
+                while site_page_count != 0 and count < num_results:
+
+                    print "----"
+                    print "starting internal loop"
+
+                    # Make sure new_url is defined before proceeding
+                    if (new_url):
+                        print "internal loop - was able to get a url from the page"
+
+                        # Get the new_url, store as current_page
+                        current_page = new_url
+
+                        # print("current page: ",current_page)
+
+                        try:
+                            # Request current_page
+                            page = requests.get(current_page)
+                            tree = html.fromstring(page.content)
+
+                            # get the list of a hrefs
+                            # ahrefs = tree.xpath("//a[contains(@href,'/') and not(contains(@href,'//'))]/@href")
+                            ahrefs = get_list_of_links(tree)
+                            # print("ahrefs: ",ahrefs)
+                        except requests.exceptions.RequestException as e:  # This is the correct syntax
+                            print e
+                            # sys.exit(1)
+                            ahrefs = []
+
+                        # if the page includes >1 links (seems "real", and we can proceed from here)
+                        if len(ahrefs) > 1:
+                            print "list of ahrefs is > 1"
+
+                            # Scrape its title, img etc
+                            title = tree.xpath("//title/text()")
+                            # print("new url: ",new_url)
+
+                            # need to define this with a regex match
+                            site_title = ""
+
+                            #  Create item & append to all_results
+                            item = {
+                                # 'url': new_url,
+                                'url': current_page,
+                                'page_title': title[0],
+                                'site': current_site,
+                                'site_title': site_title
+                            }
+                            all_results.append(item)
+
+                            print
+                            print
+                            print "WITH APP.APP_CONTEXT"
+                            print
+                            print
+
+                            with app.app_context():
+                                print
+                                print
+                                print "YIELD NOW"
+                                print
+                                print
+                                yield render_template('news_item.html', item=item)
+                                print
+                                print
+                                print "YIELDED"
+                                print
+                                print
+
+                            print "added to all_results: %s" % item
+
+                            # now on to the next
+                            # get the next URL to work on and store it as new_url
+                            new_url = get_random_url(current_site, ahrefs)
+                            # print(get_random_url(current_site,test))
+                            print "prepping next URL: %s" % new_url
+
+                            # increment the number of results on the page
+                            count = count + 1
+
+                            # # since it all worked, roll the dice here
+                            # # generate randomly between 0-x
+                            # # internal loop will stop if it's 0
+                            # # (so, can change the likelihood by changing 2nd argument)
+                            # # lower argument = more likely to start a new site
+                            # site_page_count = random.randint(0,2)
+                            # print("dice rolled: ",site_page_count)
+
+
+                        else:
+                            print "list of ahrefs is: ", ahrefs
+                            # ...get a new URL and loop back around with that one
+                            new_url = get_random_url_from_page(current_site, current_site)
+                            print "last URL didn't have ahrefs, so prepping next URL: %s" % new_url
+
+
+                    # If new_url is not defined...
+                    else:
+                        # this url is bogus somehow
+                        # so reset to the current site and go from there
+
+                        print "new_url is false"
+                        print "current_site: %s" % current_site
+                        print "current_page: %s" % current_page
+                        print
+
+                        # ...get a new URL and loop back around with that one
+                        new_url = get_random_url_from_page(current_site, current_site)
+
+                    # generate randomly between 0-x
+                    # internal loop will stop if it's 0
+                    # (so, can change the likelihood by changing 2nd argument)
+                    # lower argument = more likely to start a new site
+                    site_page_count = random.randint(0, 2)
+                    print "dice rolled: %s" % site_page_count
+
+            else:
+                print "was not able to get a url from homepage: %s" % current_site
+
+
+
+
+
+
+        yield render_template('news2_footer.html')
+        print "yielded"
+    return Response(stream_with_context(generate()))
+
+
+
 # @app.route('/news/')
 @app.route('/')
 def news():
-    return render_template('news.html')
+    # return render_template('news.html')
+    print "in news, calling stream()"
+    return Response(stream())
 
 
-# @app.route('/news/')
-@app.route('/ajax/news/')
-# @app.route('/news/<name>')
-
-def ajax_news(news=None):
-
+def generate_ajax():
     # @app.stream_with_context
     # def generate():
     #     yield 'Hello '
@@ -271,6 +475,28 @@ def ajax_news(news=None):
                             'site_title': site_title
                         }
                         all_results.append(item)
+
+                        print
+                        print
+                        print "WITH APP.APP_CONTEXT"
+                        print
+                        print
+
+                        with app.app_context():
+                            print
+                            print
+                            print "YIELD NOW"
+                            print
+                            print
+                            yield render_template('news_item.html', item=item)
+                            print
+                            print
+                            print "YIELDED"
+                            print
+                            print
+
+
+
                         print "added to all_results: %s" %item
 
                         # now on to the next
@@ -322,8 +548,159 @@ def ajax_news(news=None):
             print "was not able to get a url from homepage: %s" %current_site
 
 
+
+# @app.route('/news/')
+@app.route('/ajax/news/')
+# @app.route('/news/<name>')
+
+def ajax_news(news=None):
+
+    # # @app.stream_with_context
+    # # def generate():
+    # #     yield 'Hello '
+    # #     yield flask.request.args['name']
+    # #     yield '!'
+    # # return flask.Response(generate())
+    #
+    # print "starting ajax_news"
+    #
+    # # Setup...
+    # num_results = 12    # number of results to display
+    # all_results = []    # objects to hold results
+    # item = []           # objects to hold results
+    # count = 0           # counter
+    #
+    # while count < num_results:
+    #
+    #     print "-------"
+    #     print "starting outer loop"
+    #     print
+    #
+    #     # Pick one (homepage) at random, store as current_site and current_page
+    #     print "calling get_random_homepage()"
+    #
+    #     current_site = get_random_homepage()
+    #     current_page = current_site
+    #
+    #     # Get a random URL from that page to work with, assign to new_url
+    #     new_url = get_random_url_from_page(current_site,current_page)
+    #     # print("new_url: ",new_url)
+    #
+    #     # if
+    #     if new_url:
+    #         print "was able to get a url from the page"
+    #
+    #
+    #         # Internal loop from here...
+    #         site_page_count = 1
+    #         # while site_page_count < 4 and count < num_results:
+    #         while site_page_count != 0 and count < num_results:
+    #
+    #             print "----"
+    #             print "starting internal loop"
+    #
+    #             # Make sure new_url is defined before proceeding
+    #             if (new_url):
+    #                 print "internal loop - was able to get a url from the page"
+    #
+    #                 # Get the new_url, store as current_page
+    #                 current_page = new_url
+    #
+    #                 # print("current page: ",current_page)
+    #
+    #                 try:
+    #                     # Request current_page
+    #                     page = requests.get(current_page)
+    #                     tree = html.fromstring(page.content)
+    #
+    #                     # get the list of a hrefs
+    #                     # ahrefs = tree.xpath("//a[contains(@href,'/') and not(contains(@href,'//'))]/@href")
+    #                     ahrefs = get_list_of_links(tree)
+    #                     # print("ahrefs: ",ahrefs)
+    #                 except requests.exceptions.RequestException as e:  # This is the correct syntax
+    #                     print e
+    #                     # sys.exit(1)
+    #                     ahrefs = []
+    #
+    #
+    #                 # if the page includes >1 links (seems "real", and we can proceed from here)
+    #                 if len(ahrefs) > 1:
+    #                     print "list of ahrefs is > 1"
+    #
+    #                     # Scrape its title, img etc
+    #                     title = tree.xpath("//title/text()")
+    #                     # print("new url: ",new_url)
+    #
+    #                     # need to define this with a regex match
+    #                     site_title = ""
+    #
+    #                     #  Create item & append to all_results
+    #                     item = {
+    #                         # 'url': new_url,
+    #                         'url': current_page,
+    #                         'page_title': title[0],
+    #                         'site': current_site,
+    #                         'site_title': site_title
+    #                     }
+    #                     all_results.append(item)
+    #
+    #                     with app.app_context():
+    #                         yield render_template('news_item.html', item=item)
+    #
+    #                     print "added to all_results: %s" %item
+    #
+    #                     # now on to the next
+    #                     # get the next URL to work on and store it as new_url
+    #                     new_url = get_random_url(current_site,ahrefs)
+    #                     # print(get_random_url(current_site,test))
+    #                     print "prepping next URL: %s" % new_url
+    #
+    #                     # increment the number of results on the page
+    #                     count = count + 1
+    #
+    #                     # # since it all worked, roll the dice here
+    #                     # # generate randomly between 0-x
+    #                     # # internal loop will stop if it's 0
+    #                     # # (so, can change the likelihood by changing 2nd argument)
+    #                     # # lower argument = more likely to start a new site
+    #                     # site_page_count = random.randint(0,2)
+    #                     # print("dice rolled: ",site_page_count)
+    #
+    #
+    #                 else:
+    #                     print "list of ahrefs is: ",ahrefs
+    #                     # ...get a new URL and loop back around with that one
+    #                     new_url = get_random_url_from_page(current_site,current_site)
+    #                     print "last URL didn't have ahrefs, so prepping next URL: %s" % new_url
+    #
+    #
+    #             # If new_url is not defined...
+    #             else:
+    #                 # this url is bogus somehow
+    #                 # so reset to the current site and go from there
+    #
+    #                 print "new_url is false"
+    #                 print "current_site: %s" % current_site
+    #                 print "current_page: %s" %current_page
+    #                 print
+    #
+    #                 # ...get a new URL and loop back around with that one
+    #                 new_url = get_random_url_from_page(current_site,current_site)
+    #
+    #             # generate randomly between 0-x
+    #             # internal loop will stop if it's 0
+    #             # (so, can change the likelihood by changing 2nd argument)
+    #             # lower argument = more likely to start a new site
+    #             site_page_count = random.randint(0,2)
+    #             print "dice rolled: %s" % site_page_count
+    #
+    #     else:
+    #         print "was not able to get a url from homepage: %s" %current_site
+
+
     # return render_template('news.html', news=all_results)
-    return render_template('news_content.html', news=all_results)
+    # return render_template('news_content.html', news=all_results)
+    return Response(generate_ajax())
 
 
 
