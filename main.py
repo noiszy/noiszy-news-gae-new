@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, Response, request
 
 from flask import render_template
 
@@ -14,6 +14,7 @@ from lxml import html
 
 import requests
 import json
+import time
 
 app = Flask(__name__)
 
@@ -25,6 +26,57 @@ app = Flask(__name__)
 # update page via ajax each time a result is loaded
 # if new url is the same as the last url, skip it
 #########
+
+
+
+# @app.route('/loop')
+# def loop():
+#     def generate():
+#         # yield "Hello"
+#         # yield "World"
+#         yield "hiiiiii"
+#     # return Response(generate())
+#     return render_template("loop_test.html",name="hello world")
+
+
+
+def generate_loop(times):
+    # yield render_template("loop_test.html")
+    for i in xrange(times):
+        time.sleep(1)
+        yield "<br>{i}: hi fancypants  ".format(i=i)
+        # yield "something"
+    with app.app_context():
+        yield render_template('loop_test.html',message="a message")
+
+@app.route('/longloop/<int:times>')
+def longloop(times):
+    # def generate(rows):
+    #     for i in xrange(rows):
+    #         time.sleep(1)
+    #         yield "{i}: hi there  ".format(i=i)
+    #
+    #         # yield render_template("loop_test.html",name="heya")
+    #
+    #         # yield render_template("loop_test.html")
+    # return Response(generate(rows))
+    return Response(generate_loop(times))
+
+
+# @app.route('/noiszy-news')
+# def loop():
+#     def generate():
+#         yield "Hello"
+#         yield "World"
+#     return Response(generate())
+#
+# @app.route('/newsitems/<int:rows>')
+# def newsitems(rows):
+#     def generate(rows):
+#         for i in xrange(rows):
+#             time.sleep(1)
+#             yield "{i}: Hello World".format(i=i)
+#     return Response(generate(rows))
 
 
 @app.route('/test')
@@ -197,7 +249,7 @@ def ajax_news(news=None):
                         print e
                         # sys.exit(1)
                         ahrefs = []
-                        
+
 
                     # if the page includes >1 links (seems "real", and we can proceed from here)
                     if len(ahrefs) > 1:
@@ -286,4 +338,4 @@ def hello(name=None):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
