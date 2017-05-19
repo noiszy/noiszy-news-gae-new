@@ -1,10 +1,13 @@
 <!doctype html>
 <head>
-  <title>Noiszy News (Alpha)</title>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-  <script>
-        var i = 0;
+    <title>Noiszy News (Alpha)</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="/static/news.js"></script>
+    <script>
+
+
         function process() {
+            var i = 0;
             console.log("starting process");
 //                $(function (i) {
 //                    $("#content").empty();
@@ -15,68 +18,88 @@
                 //clear div contents
 
                 $(function (i) {
-                    $("<div>").load("/ajax/news2", function () {
+//                    $("<div>").load("/ajax/news2", function () {
+                    $("<div>").load("/ajax/news3", function (response) {
+
+//                        alert(response);
+                        console.log("JSON ",i,": ")
+                        console.log(response)
+
+                        json_response = JSON.parse(response)
+                        console.log("parsed JSON: ", json_response)
+
+                        console.log("response.site: ",json_response.site)
+                        console.log("response.page_title: ",json_response.page_title)
+                        console.log("response.url: ",json_response.url)
+
+                        console.log("write_news_item now")
+
+                        var news_items_wrapper = document.getElementById("news_items_wrapper");
+
+                        write_news_item(
+                            site=json_response.site,
+                            title=json_response.page_title,
+                            link=json_response.url,
+                            i=i,
+                            div=news_items_wrapper
+                        );
+
+                        // display the response, and
+                        // store the next_url so we can pass it next
+
+
+//                        alert(this);
+//                        console.log("JSON ",i,": ")
+//                        console.log(this)
+//                        console.log("parseJSON ",i,": ",JSON.parse(this))
+
+
+//                        $("#content").append($(this).html());
+                        //clear div contents
                         $("#loading").empty();
-                        $("#content").append($(this).html());
                     });
-//          $("#content").load("/ajax/news2");
-//          $("#content").load("/ajax/news2");
                 });
 
-
-//                $("#content").load("/ajax/news2/");
-                 /*            url = "http://some.." + i
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET", url, true);
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState == 4) {
-                        alert(xhr.responseText)
-                        i++
-                        process()
-                    }
-                }
-                xhr.send();
-    */
                 console.log("end loop iteration");
                 i++;
             }
 
-//            } else {
             console.log("done")
-//            }
         }
         process();
 
-/*      $(function () {
-          $("#content").load("/ajax/news2");
-      });
-*/
-  </script>
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='news.css') }}">
+    </script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='news.css') }}">
 </head>
 
-  <body>
 
-  <h1>Noiszy News (Alpha)</h1>
+<body>
 
-    <div id="description">
-      A pseudo-random sampling of stories from news sites, unfiltered & unpersonalized.<br>
-      (Better description to come...)
+    <h1>Noiszy News (Alpha)</h1>
 
-        <p>You're going to get {{ number_of_results }} results (if nothing breaks).</p>
+        <div id="description">
+            A pseudo-random sampling of stories from news sites, unfiltered & unpersonalized.<br>
+            (Better description to come...)
 
-    </div>
+            <p>You're going to get {{ number_of_results }} results (if nothing breaks).</p>
+
+        </div>
 
     <div id="content">
 
-      <div id="loading">
-        Loading scraped news stories...this may take awhile.<br>
-<!--        <img src="/static/imgs/loading.gif"> -->
-      </div>
+        <div id="news_items_wrapper"></div>
 
+
+        <div id="loading">
+            Loading scraped news stories...this may take awhile.<br>
+<!--        <img src="/static/imgs/loading.gif"> -->
+        </div>
     </div>
 
-  Footer.
+    Footer.
 
-  </body>
+</body>
+
+</html>

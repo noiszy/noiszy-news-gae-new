@@ -111,6 +111,20 @@ def get_random_url(protocol_and_domain,list_of_links,exclude=None):
         return False
 
 
+def get_random_url_no_domain(list_of_links,exclude=None):
+    #####
+    # ADD (functionality): list of links to exclude, so we can exclude the most recently posted
+    #####
+
+    if len(list_of_links) > 0:
+        rand = random.randint(0,len(list_of_links)-1)
+        print"returning get_random_url: %s" % list_of_links[rand]
+        return protocol_and_domain + list_of_links[rand]
+    else:
+        print "returning get_random_url: False"
+        return False
+
+
 def get_list_of_links(tree):
     # not([href*='live']):not([href*='stream']):not([href*='/go2']):not([href*='video'])
     # return tree.xpath("//a[contains(@href,'/') and not(contains(@href,'//'))]/@href")  #  a hrefs
@@ -128,10 +142,13 @@ def get_random_url_from_page(protocol_and_domain,url,exclude=None):
 
     # Load page
     # print("about to use requests package")
+    print "in get_random_url_from_page"
     try:
         page = requests.get(url)
+        print "got page"
         # page = urlfetch.fetch(url)
         tree = html.fromstring(page.content)
+        print "got tree"
 
         # Get links on the page
         # Need to refine this with CSS selector
@@ -142,6 +159,8 @@ def get_random_url_from_page(protocol_and_domain,url,exclude=None):
         # test = tree.xpath("//a[not(contains(@href,'//'))]/@href")
         # ahrefs = tree.xpath("//a[contains(@href,'/') and not(contains(@href,'//'))]/@href")
         ahrefs = get_list_of_links(tree)
+        print "got ahrefs"
+        print ahrefs
 
         # Choose one at random, and set it as new_url
         url = get_random_url(protocol_and_domain,ahrefs)
@@ -151,6 +170,48 @@ def get_random_url_from_page(protocol_and_domain,url,exclude=None):
         print e
         # sys.exit(1)
         return False
+
+
+
+def get_random_url_from_page_no_domain(url,exclude=None):
+    #####
+    # ADD (functionality): list of links to exclude, so we can exclude the most recently posted
+    #####
+
+    # Load page
+    # print("about to use requests package")
+    print "in get_random_url_from_page"
+    try:
+        page = requests.get(url)
+        print "got page"
+        # page = urlfetch.fetch(url)
+        tree = html.fromstring(page.content)
+        print "got tree"
+
+        # Get links on the page
+        # Need to refine this with CSS selector
+
+        # test = tree.xpath('//title/text()')
+        # test = tree.xpath("//a[@href]/text()")
+        # test = tree.xpath("//a[@href]/@href")
+        # test = tree.xpath("//a[not(contains(@href,'//'))]/@href")
+        # ahrefs = tree.xpath("//a[contains(@href,'/') and not(contains(@href,'//'))]/@href")
+        ahrefs = get_list_of_links(tree)
+        print "got ahrefs"
+        print ahrefs
+
+        # Choose one at random, and set it as new_url
+        # url = get_random_url(protocol_and_domain,ahrefs)
+        url = get_random_url_no_domain(ahrefs)
+        print("returning get_random_url_from_page: ",url)
+        return url  # chosen link (url) from the original url
+    except requests.exceptions.RequestException as e:  # This is the correct syntax
+        print e
+        # sys.exit(1)
+        return False
+
+
+
 
 def get_random_homepage(exclude=None):
 
@@ -162,7 +223,8 @@ def get_random_homepage(exclude=None):
 
     # OMG THIS IS THE PROBLEM
 
-    with open('static/site_list.json') as json_data:
+    # with open('static/site_list.json') as json_data:
+    with open('static/site_list_backup.json') as json_data:
         print "opened"
         presets = json.load(json_data)
         # print "presets: %s" % presets
@@ -396,11 +458,71 @@ def streamed_response(number_of_results=12):
 
 
 
-# @app.route('/news/')
-@app.route('/ajax/news2/')
-# @app.route('/news/<name>')
+def click_link_or_start_over(from_url):
 
-def ajax_news2(news=None):
+    # roll the dice
+    dice = 1
+
+    if dice == 0:
+        # start again
+        # get a new homepage
+        new_url = get_random_homepage()
+
+    else:
+        # use this page
+        # Get new_url from this page's list of links
+        # new_url = get_random_url_from_page_no_domain("http://www.google.com",from_url)
+
+        new_url = get_random_url_from_page_no_domain(from_url)
+
+        # if there's an error in the above, then do this:
+        # new_url = get_random_homepage()
+
+    return new_url
+
+
+def create_json(url, page_title, site, site_title, next_link=None):
+    item = {
+        # 'url': new_url,
+        'url': url,
+        'page_title': page_title,
+        'site': site,
+        'site_title': site_title,
+        'next_link': next_link
+    }
+    json_item = json.dumps(item)
+    # print "json_item:"
+    # print json_item
+    #
+    # print "item:"
+    # print item
+
+    return json_item
+
+
+
+@app.route('/ajax/news3/')
+
+# write a new function here for ajax/news3
+# use click_link_or_start_over(from_url)
+# also need a function...don't want to get pages twice.  When we get a page, should grab its:
+# - title
+# - url (already have)
+# - next_link link to click (random link on the page)
+# ...all at once.
+# so it should take an optional argument -
+    # if arg exists, roll the dice to see if it should be used
+    # if not, get new random homepage url
+    # proceed with that url
+    # get page
+    # extract & return title, url, and next_link
+    # on the page - use the next_link the next time around in the loop
+    #
+# draw this out.
+
+def ajax_news_3(news=None):
+    print
+    print "in ajax_news2"
     try:
         # Pick one (homepage) at random, store as current_site and current_page
         print "calling get_random_homepage()"
@@ -430,9 +552,30 @@ def ajax_news2(news=None):
                 ahrefs = get_list_of_links(tree)
                 # print("ahrefs: ",ahrefs)
             except requests.exceptions.RequestException as e:  # This is the correct syntax
+                print "request error:"
                 print e
                 # sys.exit(1)
                 ahrefs = []
+                # Create item & append to all_results
+                errormsg = "couldn't get current page: " + current_page
+                return create_json(
+                    url=errormsg,
+                    page_title=errormsg,
+                    site=errormsg,
+                    site_title=errormsg
+                )
+
+                # item = {
+                #     # 'url': new_url,
+                #     'url': errormsg,
+                #     'page_title': errormsg,
+                #     'site': errormsg,
+                #     'site_title': errormsg
+                # }
+                #
+                # # return
+                # # return render_template('news_content.html', news=all_results)
+                # return render_template('news_item.html', item=item)
 
             # if the page includes >1 links (seems "real", and we can proceed from here)
             if len(ahrefs) > 1:
@@ -440,6 +583,199 @@ def ajax_news2(news=None):
 
                 # Scrape its title, img etc
                 title = tree.xpath("//title/text()")
+                print "title: %s" % title
+                print "page_title: %s" % title[0]
+                print "site: %s" % current_site
+                # print("new url: ",new_url)
+
+                # need to define this with a regex match
+                site_title = ""
+
+                #  Create item & append to all_results
+                return create_json(
+                    url=current_page,
+                    page_title=title[0],
+                    site=current_site,
+                    site_title=site_title
+                )
+                # item = {
+                #     # 'url': new_url,
+                #     'url': current_page,
+                #     'page_title': title[0],
+                #     'site': current_site,
+                #     'site_title': site_title
+                # }
+                # json_item = json.dumps(item)
+                # print "json_item:"
+                # print json_item
+                #
+                # print "item:"
+                # print item
+                #
+                #
+                # # return
+                # # return render_template('news_content.html', news=all_results)
+                # # return render_template('news_item.html', item=item)
+                # return json_item
+
+            else:
+                # Create item & append to all_results
+                errormsg = "couldn't detect >1 hrefs: " + current_page
+                return create_json(
+                    url=errormsg,
+                    page_title=errormsg,
+                    site=errormsg,
+                    site_title=errormsg
+                )
+                # item = {
+                #     # 'url': new_url,
+                #     'url': errormsg,
+                #     'page_title': errormsg,
+                #     'site': errormsg,
+                #     'site_title': errormsg
+                # }
+                #
+                # # return
+                # # return render_template('news_content.html', news=all_results)
+                # return render_template('news_item.html', item=item)
+        else:
+
+            # couldn't get a URL on the current_page
+
+            # Create item & append to all_results
+            errormsg = "couldn't get a URL from: " + current_page
+            return create_json(
+                url=errormsg,
+                page_title=errormsg,
+                site=errormsg,
+                site_title=errormsg
+            )
+            # item = {
+            #     # 'url': new_url,
+            #     'url': errormsg,
+            #     'page_title': errormsg,
+            #     'site': errormsg,
+            #     'site_title': errormsg
+            # }
+            #
+            # # return
+            # # return render_template('news_content.html', news=all_results)
+            # return render_template('news_item.html', item=item)
+
+
+    except ValueError:
+        print "was NOT able to get a url from the page"
+        #  Create item & append to all_results
+        errormsg = "error"
+        return create_json(
+            url=errormsg,
+            page_title=errormsg,
+            site=errormsg,
+            site_title=errormsg
+        )
+        # item = {
+        #     # 'url': new_url,
+        #     'url': "error",
+        #     'page_title': "error",
+        #     'site': "error",
+        #     'site_title': "error"
+        # }
+        #
+        # # return
+        # # return render_template('news_content.html', news=all_results)
+        # return render_template('news_item.html', item=item)
+        # # return "error on this one"
+        # # that's not working, try again.
+
+    #  Create item & append to all_results
+    errormsg = "end of ajax/news2"
+    return create_json(
+        url="",
+        page_title=errormsg,
+        site=errormsg,
+        site_title=errormsg
+    )
+    # item = {
+    #     # 'url': new_url,
+    #     'url': "end of ajax/news2",
+    #     'page_title': "end of ajax/news2",
+    #     'site': "end of ajax/news2",
+    #     'site_title': "end of ajax/news2",
+    #     'next_url': ""
+    # }
+    #
+    # json_item = json.dumps(item)
+    # print "json_item:"
+    # print json_item
+    #
+    # # return
+    # # return render_template('news_content.html', news=all_results)
+    # return render_template('news_item.html', item=item)
+
+
+# @app.route('/news/')
+@app.route('/ajax/news2/')
+# @app.route('/news/<name>')
+
+def ajax_news2(news=None):
+    print
+    print "in ajax_news2"
+    try:
+        # Pick one (homepage) at random, store as current_site and current_page
+        print "calling get_random_homepage()"
+
+        current_site = get_random_homepage()
+        current_page = current_site
+
+        # Get a random URL from that page to work with, assign to new_url
+        new_url = get_random_url_from_page(current_site, current_page)
+        # print("new_url: ",new_url)
+
+        # if
+        if new_url:
+            print "was able to get a url from the page"
+            # Get the new_url, store as current_page
+            current_page = new_url
+
+            # print("current page: ",current_page)
+
+            try:
+                # Request current_page
+                page = requests.get(current_page)
+                tree = html.fromstring(page.content)
+
+                # get the list of a hrefs
+                # ahrefs = tree.xpath("//a[contains(@href,'/') and not(contains(@href,'//'))]/@href")
+                ahrefs = get_list_of_links(tree)
+                # print("ahrefs: ",ahrefs)
+            except requests.exceptions.RequestException as e:  # This is the correct syntax
+                print "request error:"
+                print e
+                # sys.exit(1)
+                ahrefs = []
+                # Create item & append to all_results
+                errormsg = "couldn't get current page: " + current_page
+                item = {
+                    # 'url': new_url,
+                    'url': errormsg,
+                    'page_title': errormsg,
+                    'site': errormsg,
+                    'site_title': errormsg
+                }
+
+                # return
+                # return render_template('news_content.html', news=all_results)
+                return render_template('news_item.html', item=item)
+
+            # if the page includes >1 links (seems "real", and we can proceed from here)
+            if len(ahrefs) > 1:
+                print "list of ahrefs is > 1"
+
+                # Scrape its title, img etc
+                title = tree.xpath("//title/text()")
+                print "title: %s" % title
+                print "page_title: %s" % title[0]
+                print "site: %s" % current_site
                 # print("new url: ",new_url)
 
                 # need to define this with a regex match
@@ -454,12 +790,74 @@ def ajax_news2(news=None):
                     'site_title': site_title
                 }
 
+                print "item:"
+                print item
+
                 # return
                 # return render_template('news_content.html', news=all_results)
                 return render_template('news_item.html', item=item)
+            else:
+                # Create item & append to all_results
+                errormsg = "couldn't detect >1 hrefs: " + current_page
+                item = {
+                    # 'url': new_url,
+                    'url': errormsg,
+                    'page_title': errormsg,
+                    'site': errormsg,
+                    'site_title': errormsg
+                }
+
+                # return
+                # return render_template('news_content.html', news=all_results)
+                return render_template('news_item.html', item=item)
+        else:
+
+            # couldn't get a URL on the current_page
+
+            # Create item & append to all_results
+            errormsg = "couldn't get a URL from: " + current_page
+            item = {
+                # 'url': new_url,
+                'url': errormsg,
+                'page_title': errormsg,
+                'site': errormsg,
+                'site_title': errormsg
+            }
+
+            # return
+            # return render_template('news_content.html', news=all_results)
+            return render_template('news_item.html', item=item)
+
+
     except ValueError:
-        return "error on this one"
+        print "was NOT able to get a url from the page"
+        #  Create item & append to all_results
+        item = {
+            # 'url': new_url,
+            'url': "error",
+            'page_title': "error",
+            'site': "error",
+            'site_title': "error"
+        }
+
+        # return
+        # return render_template('news_content.html', news=all_results)
+        return render_template('news_item.html', item=item)
+        # return "error on this one"
         # that's not working, try again.
+
+    #  Create item & append to all_results
+    item = {
+        # 'url': new_url,
+        'url': "end of ajax/news2",
+        'page_title': "end of ajax/news2",
+        'site': "end of ajax/news2",
+        'site_title': "end of ajax/news2"
+    }
+
+    # return
+    # return render_template('news_content.html', news=all_results)
+    return render_template('news_item.html', item=item)
 
 
 def ajax_news2_old(news=None):
