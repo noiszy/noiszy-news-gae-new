@@ -4,63 +4,19 @@
     ],
     "default": [
       {
-        "url": "http://www.bbc.com",
-        "checked": "true"
-      },
-      {
-        "url": "http://www.bloomberg.com",
-        "checked": "true"
-      },
-      {
-        "url": "http://www.breitbart.com",
+        "url": "https://www.nytimes.com",
         "checked": ""
       },
       {
-        "url": "http://www.cbsnews.com",
-        "checked": "true"
+        "url": "http://www.shareblue.com",
+        "checked": ""
       },
       {
-        "url": "http://www.chron.com",
-        "checked": "true"
-      },
-      {
-        "url": "http://www.cnn.com",
-        "checked": "true"
-      },
-      {
-        "url": "http://www.foxnews.com",
+        "url": "http://www.time.com",
         "checked": "true"
       },
       {
         "url": "http://www.indiatimes.com",
-        "checked": "true"
-      },
-      {
-        "url": "http://www.latimes.com",
-        "checked": "true"
-      },
-      {
-        "url": "http://money.cnn.com",
-        "checked": "true"
-      },
-      {
-        "url": "http://www.msnbc.com",
-        "checked": "true"
-      },
-      {
-        "url": "http://www.nbcnews.com",
-        "checked": "true"
-      },
-      {
-        "url": "http://www.news.yahoo.com",
-        "checked": "true"
-      },
-      {
-        "url": "http://www.reuters.com",
-        "checked": "true"
-      },
-      {
-        "url": "http://www.thehill.com",
         "checked": "true"
       }
     ]
