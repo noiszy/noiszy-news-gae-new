@@ -36,14 +36,15 @@
 
                         console.log("write_news_item now")
 
-                        var news_items_wrapper = document.getElementById("news_items_wrapper");
+//                        var news_items_wrapper = document.getElementById("news_items_wrapper");
                         write_news_item(
                             site=json_response.site,
                             title=json_response.page_title,
                             link=json_response.url,
-                            div=news_items_wrapper,
+                            divId="news_items_wrapper",
                             fromPage=json_response.from_page,
-                            i=i,
+                            siteTitle=json_response.site_title,
+                            i=i
                         );
 
                         // display the response, and

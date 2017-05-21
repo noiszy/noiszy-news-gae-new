@@ -15,7 +15,7 @@ import nn_utils
 # - Error
 
 def get_nn_item(url, from_page, exclude=None):
-    print "in get_nn_item for %s" % url
+    print "in get_nn_item for %s, from_page %s" % (url, from_page)
     try:
         page = requests.get(url)
         # print "got page"
@@ -34,7 +34,7 @@ def get_nn_item(url, from_page, exclude=None):
         # Check for errors
         if (next_link['error']):
             print "ERROR GETTING HREF FROM %s" % url
-            print result.error
+            print next_link.error
             return {
                 'url':url,
                 'title': None,
@@ -181,6 +181,7 @@ def get_random_url_from_page(url, exclude=None):
         # test = tree.xpath("//a[@href]/@href")
         # test = tree.xpath("//a[not(contains(@href,'//'))]/@href")
         # ahrefs = tree.xpath("//a[contains(@href,'/') and not(contains(@href,'//'))]/@href")
+
         ahrefs = get_list_of_links(tree,url)
         print "got ahrefs"
         # print ahrefs
@@ -194,9 +195,12 @@ def get_random_url_from_page(url, exclude=None):
 
         # Choose one at random, and set it as new_url
         # url = get_random_url(protocol_and_domain,ahrefs)
+
         new_url = get_random_url(url,ahrefs)
+        print "got new_url: %s" % new_url
+
         if (new_url):
-            print "returning get_random_url_from_page: %s" %url
+            print "returning get_random_url_from_page: %s, new_url is: %s " %(url, new_url)
             # return url  # chosen link (url) from the original url
             return {
                 'new_url':new_url,

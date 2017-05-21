@@ -42,7 +42,7 @@ app = Flask(__name__)
 # calls /ajax/news3/
 @app.route('/news/')
 @app.route('/news/<number_of_results>')
-def ajax_practice_news(number_of_results=10): # default num results here
+def news(number_of_results=10): # default num results here
     num = int(number_of_results)
     print num
     if num > 20: # max num results here
@@ -55,6 +55,8 @@ def ajax_practice_news(number_of_results=10): # default num results here
 @app.route('/ajax/news3/')
 
 def ajax_news_3(news=None):
+
+    print
     print
     print "in ajax_news3"
     try:
@@ -64,7 +66,11 @@ def ajax_news_3(news=None):
 
         # Pick one (homepage) at random, store as current_site and current_page
         # print "calling get_random_homepage()"
-        current_site = nn_utils.get_random_homepage()
+
+        current_site_obj = nn_utils.get_random_homepage()
+
+        current_site = current_site_obj['url']
+        current_site_title = current_site_obj['title']
 
         current_page = current_site
 
@@ -72,12 +78,18 @@ def ajax_news_3(news=None):
         # new_url = noiszy_news.get_random_url_from_page(current_page)
 
         nn = noiszy_news.get_random_url_from_page(current_page)
+        print "got nn.get_random_url_from_page:"
+        print nn
 
         # check for errors
         if nn['error']:
+            # while debugging, go ahead and return this and print out the error
+            # if not debugging, should just do nothing with return values like this
+
             print "##### got errormessage: %s #####" % nn['error']
             errormsg = "couldn't get link on homepage %s " % current_page
             return nn_utils.create_json(error=errormsg)
+
         else:
             new_url = nn['new_url']
             current_page = nn['url'] # redundant
@@ -86,8 +98,9 @@ def ajax_news_3(news=None):
             # if new_url:
             print "was able to get a url from the page"
             # Get the new_url, store as current_page
-            current_page = new_url
+            # current_page = new_url
             print("current page: ",current_page)
+            print("new_url: ",new_url)
 
             # now we have the url of a page linked to from the home page
             # but we need the content of that page to create the news item.
@@ -105,8 +118,8 @@ def ajax_news_3(news=None):
             nni_json = nn_utils.create_json(
                 url=nni['url'],
                 page_title=nni['title'],
-                site="site",
-                site_title="site title",
+                site=current_site,
+                site_title=current_site_title,
                 next_link=nni['next_page'],
                 from_page=nni['from_page']
             )
@@ -114,57 +127,7 @@ def ajax_news_3(news=None):
             print "nni_json: %s" % nni_json
             return nni_json
 
-            # try:
-            #     noiszy_news.get_random_url_from_page(current_page)['url'] # assumes no error...
-            #     # Request current_page
-            #     page = requests.get(current_page)
-            #     tree = html.fromstring(page.content)
-            #
-            #     # get the list of a hrefs
-            #     ahrefs = noiszy_news.get_list_of_links(tree,current_page)
-            #     # print("ahrefs: ",ahrefs)
-            # except requests.exceptions.RequestException as e:  # This is the correct syntax
-            #     print "request error:"
-            #     print e
-            #     ahrefs = []
-            #     # Create item & append to all_results
-            #     errormsg = "couldn't get current page: " + current_page
-            #     return noiszy_news.create_json(error=errormsg)
-            #
-            # # if the page includes >1 links (seems "real", and we can proceed from here)
-            # if len(ahrefs) > 1:
-            #     print "list of ahrefs is > 1"
-            #
-            #     # Scrape its title, img etc
-            #     title = tree.xpath("//title/text()")
-            #     print "title: %s" % title
-            #     print "page_title: %s" % title[0]
-            #     print "site: %s" % current_site
-            #     # print("new url: ",new_url)
-            #
-            #     # need to define this with a regex match
-            #     site_title = ""
-            #
-            #     #  Create item & append to all_results
-            #     return noiszy_news.create_json(
-            #         url=current_page,
-            #         page_title=title[0],
-            #         site=current_site,
-            #         site_title=site_title
-            #     )
-            #
-            # else:
-            #     # Create item & append to all_results
-            #     errormsg = "couldn't detect >1 hrefs: " + current_page
-            #     return noiszy_news.create_json(error=errormsg)
 
-        # else:
-        #
-        #     # couldn't get a URL on the current_page
-        #
-        #     # Create item & append to all_results
-        #     errormsg = "couldn't get a URL from: " + current_page
-        #     return noiszy_news.create_json(error=errormsg)
 
     except ValueError:
         print "was NOT able to get a url from the page"
@@ -177,6 +140,128 @@ def ajax_news_3(news=None):
     return noiszy_news.create_json(error=errormsg)
 
 
+
+
+
+# calls /ajax/news4/
+@app.route('/deep_news/')
+@app.route('/deep_news/<number_of_results>')
+def deep_news(number_of_results=10): # default num results here
+    num = int(number_of_results)
+    print num
+    if num > 20: # max num results here
+        num = 20;
+    return render_template('deep_news.html',number_of_results=num)
+    # print "in news, calling stream()"
+
+
+
+@app.route('/ajax/news4/')
+
+def ajax_news_4(news=None):
+
+    print
+    print
+    print "in ajax_news4"
+    try:
+
+        # For right now - always starting at the homepage
+        # Update this.
+
+        # Pick one (homepage) at random, store as current_site and current_page
+        # print "calling get_random_homepage()"
+
+        current_site_obj = nn_utils.get_random_homepage()
+
+        current_site = current_site_obj['url']
+        current_site_title = current_site_obj['title']
+
+        current_page = current_site
+
+        # Get a random URL from that page to work with, assign to new_url
+        # new_url = noiszy_news.get_random_url_from_page(current_page)
+
+        nn = noiszy_news.get_random_url_from_page(current_page)
+        print "got nn.get_random_url_from_page:"
+        print nn
+
+        # check for errors
+        if nn['error']:
+            # while debugging, go ahead and return this and print out the error
+            # if not debugging, should just do nothing with return values like this
+
+            print "##### got errormessage: %s #####" % nn['error']
+            errormsg = "couldn't get link on homepage %s " % current_page
+            return [nn_utils.create_json(error=errormsg)]
+
+        else:
+            new_url = nn['new_url']
+            current_page = nn['url'] # redundant
+            # print("new_url: ",new_url)
+
+            # if new_url:
+            print "was able to get a url from the page"
+            # Get the new_url, store as current_page
+            # current_page = new_url
+            print("current page: ",current_page)
+            print("new_url: ",new_url)
+
+            # now we have the url of a page linked to from the home page
+            # but we need the content of that page to create the news item.
+            # so, get the content of that page now.
+
+
+            #####
+            # need to split out function to get page contents, and one to get a random link
+            # can wrap both of those up togehter
+            # add to functions: success param, or "# of hrefs" - something to trigger error sfrom
+
+            # nni = noiszy_news.get_nn_item(current_page,nn['url'])
+            nni = noiszy_news.get_nn_item(new_url,current_page)
+
+
+            # update this function (nn_utils.create_json) to work with an array of these obj
+            # nni_json = nn_utils.create_json(
+            #     url=nni['url'],
+            #     page_title=nni['title'],
+            #     site=current_site,
+            #     site_title=current_site_title,
+            #     next_link=nni['next_page'],
+            #     from_page=nni['from_page']
+            # )
+
+            nni_obj1 = {
+                'url': nni['url'],
+                'page_title': nni['title'],
+                'site': current_site,
+                'site_title': current_site_title,
+                'next_link': nni['next_page'],
+                'from_page': nni['from_page']
+            }
+
+
+            #######
+            # SEND BACK MULTIPLE ONES
+
+
+            # print "nni_json: %s" % nni_json
+            nni_list = [nni_obj1]
+            print "nni_list: %s" % nni_list
+            nni_list_json = json.dumps(nni_list)
+            print "nni_list_json: %s" % nni_list_json
+            return nni_list_json
+
+
+
+    except ValueError:
+        print "was NOT able to get a url from the page"
+        #  Create item & append to all_results
+        errormsg = "error"
+        return [noiszy_news.create_json(error=errormsg)]
+
+    #  Create item & append to all_results
+    errormsg = "end of ajax/news2"
+    return [noiszy_news.create_json(error=errormsg)]
 
 
 

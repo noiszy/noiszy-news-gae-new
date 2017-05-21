@@ -118,7 +118,6 @@ def get_random_homepage(exclude=None):
 
     # with open('static/site_list.json') as json_data:
     with open('static/site_list_backup.json') as json_data:
-        print "opened"
         presets = json.load(json_data)
         # print "presets: %s" % presets
 
@@ -131,8 +130,8 @@ def get_random_homepage(exclude=None):
         # return url
         # print("returning random homepage: ",site_list[rand_site_num]['url'])
         print "returning random homepage: %s" % site_list[rand_site_num]['url']
-        return site_list[rand_site_num]['url']
-
+        # return site_list[rand_site_num]['url']
+        return site_list[rand_site_num]
 
 
 # def click_link_or_start_over(from_url):

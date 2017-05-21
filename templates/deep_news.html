@@ -1,0 +1,140 @@
+<!doctype html>
+<head>
+    <title>Noiszy News (Alpha)</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="/static/news.js"></script>
+    <script>
+
+
+        function process() {
+            var i = 0;
+            console.log("");
+            console.log("starting process");
+//                $(function (i) {
+//                    $("#content").empty();
+//                });
+
+            while (i < {{ number_of_results }}) {
+                console.log("i ", i);
+
+                //clear div contents
+
+                $(function (i) {
+
+                    // get a whole site's worth of news
+                    // response will contain a collection of items
+                    $("<div>").load("/ajax/news4", function (collection) {
+
+                        console.log("collection");
+                        console.log(collection);
+                        console.log(typeof collection);
+                            json_collection = JSON.parse(collection)
+                            console.log("parsed JSON collection: ", json_collection)
+                        console.log(json_collection);
+                        console.log(typeof json_collection);
+                        console.log("json_collection[0]");
+                        console.log(json_collection[0]);
+
+                        var response;
+
+
+
+
+
+                        // OK THIS WORKS!
+                        // NOW JUST SEND BACK MULTIPLE ONES
+
+                        //for (response in collection) {
+//                        for (j in collection) {
+//                        for (var j = 0; j < collection.length; j++){
+                        for (var j = 0; j < json_collection.length; j++){
+                            response = json_collection[j];
+
+                            console.log("LOOPING OVER COLLECTION");
+                            console.log(response);
+                            console.log("JSON ", i, ": ");
+                            console.log(response);
+
+//                            json_response = JSON.parse(response)
+                            json_response = response;
+                            console.log("parsed JSON: ", json_response)
+
+                            console.log("response.site: ", json_response.site)
+                            console.log("response.page_title: ", json_response.page_title)
+                            console.log("response.url: ", json_response.url)
+                            console.log("response.from_page: ", json_response.from_page)
+
+                            console.log("write_news_item now")
+
+                            //                        var news_items_wrapper = document.getElementById("news_items_wrapper");
+                            write_news_item(
+                                site = json_response.site,
+                                title = json_response.page_title,
+                                link = json_response.url,
+                                divId = "news_items_wrapper",
+                                fromPage = json_response.from_page,
+                                siteTitle = json_response.site_title,
+                                i = i
+                            );
+
+                            // display the response, and
+                            // store the next_url so we can pass it next
+
+
+                            //                        alert(this);
+                            //                        console.log("JSON ",i,": ")
+                            //                        console.log(this)
+                            //                        console.log("parseJSON ",i,": ",JSON.parse(this))
+
+
+                            //                        $("#content").append($(this).html());
+                            //clear div contents
+                            $("#loading").empty();
+
+                        }
+                    });
+                });
+
+                console.log("end loop iteration");
+                i++;
+            }
+
+            console.log("done")
+        }
+        process();
+
+
+    </script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='news.css') }}">
+</head>
+
+
+<body>
+
+    <h1>Noiszy News (Alpha)</h1>
+
+        <div id="description">
+            A pseudo-random sampling of stories from news sites, unfiltered & unpersonalized.<br>
+            (Better description to come...)
+
+            <p>You're going to get {{ number_of_results }} results (if nothing breaks).</p>
+
+        </div>
+
+    <div id="content">
+
+        <div id="news_items_wrapper"></div>
+
+
+        <div id="loading">
+            Loading scraped news stories...this may take awhile.<br>
+<!--        <img src="/static/imgs/loading.gif"> -->
+        </div>
+    </div>
+
+    Footer.
+
+</body>
+
+</html>

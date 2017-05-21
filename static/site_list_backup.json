@@ -5,130 +5,162 @@
     "default": [
       {
         "url": "http://abcnews.go.com",
+        "title": "ABC News",
         "checked": "true"
       },
       {
         "url": "http://www.aljazeera.com",
+        "title": "Al Jazeera",
         "checked": "true"
       },
       {
         "url": "http://www.bbc.com",
+        "title": "BBC",
         "checked": "true"
       },
       {
         "url": "http://www.bloomberg.com",
+        "title": "Bloomberg",
         "checked": "true"
       },
       {
         "url": "http://www.breitbart.com",
+        "title": "Breitbart",
         "checked": ""
       },
       {
         "url": "http://www.cbsnews.com",
+        "title": "CBS News",
         "checked": "true"
       },
       {
         "url": "http://www.chron.com",
+        "title": "Chron.com",
         "checked": "true"
       },
       {
         "url": "http://www.cnbc.com",
+        "title": "CNBC",
         "checked": "true"
       },
       {
         "url": "http://www.cnn.com",
+        "title": "CNN",
         "checked": "true"
       },
       {
         "url": "http://www.drudgereport.com",
+        "title": "Drudge Report",
         "checked": "true"
       },
       {
         "url": "http://www.foxnews.com",
+        "title": "Fox News",
         "checked": "true"
       },
       {
         "url": "http://www.indiatimes.com",
+        "title": "India Times",
         "checked": "true"
       },
       {
         "url": "http://www.latimes.com",
+        "title": "LA Times",
         "checked": "true"
       },
       {
         "url": "http://money.cnn.com",
+        "title": "Money.CNN.com",
         "checked": "true"
       },
       {
         "url": "http://www.msnbc.com",
+        "title": "MSNBC",
         "checked": "true"
       },
       {
         "url": "https://www.nationalgeographic.com",
+        "title": "National Geographic",
         "checked": "true"
       },
       {
         "url": "http://www.nbcnews.com",
+        "title": "NBC News",
         "checked": "true"
       },
       {
         "url": "http://www.news.yahoo.com",
+        "title": "Yahoo",
         "checked": "true"
       },
       {
         "url": "http://www.news.google.com",
+        "title": "Google News",
         "checked": "true"
       },
       {
         "url": "http://www.nypost.com",
+        "title": "NY Post",
         "checked": "true"
       },
       {
         "url": "https://www.nytimes.com",
+        "title": "New York Times",
         "checked": ""
       },
       {
         "url": "http://www.reddit.com",
+        "title": "Reddit",
         "checked": ""
       },
       {
         "url": "http://www.reuters.com",
+        "title": "Reuters",
         "checked": "true"
       },
       {
         "url": "http://www.shareblue.com",
+        "title": "Shareblue",
         "checked": ""
       },
       {
         "url": "http://www.theatlantic.com",
+        "title": "The Atlantic",
         "checked": "true"
       },
       {
         "url": "http://www.theguardian.com",
+        "title": "The Guardian",
         "checked": "true"
       },
       {
         "url": "http://www.thehill.com",
+        "title": "The Hill",
         "checked": "true"
       },
       {
         "url": "http://www.time.com",
+        "title": "Time",
         "checked": "true"
       },
       {
         "url": "https://www.usatoday.com",
+        "title": "USA Today",
         "checked": "true"
       },
       {
         "url": "https://www.usnews.com",
+        "title": "US News",
         "checked": "true"
       },
       {
         "url": "http://www.washingtonpost.com",
+        "title": "Washington Post",
         "checked": ""
       },
       {
         "url": "https://www.wsj.com",
+        "title": "Wall Street Journal",
         "checked": "true"
       }
     ]
