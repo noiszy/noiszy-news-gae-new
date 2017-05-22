@@ -39,7 +39,7 @@ function write_news_item(site, title, link, divId, fromPage, siteTitle, i) {
 
   thisFromPage = document.createElement("span");
   thisFromPage.setAttribute("class", "href-site");
-  thisFromPage.innerHTML = "linked from: " + fromPage;
+  thisFromPage.innerHTML = "linked from " + fromPage;
 
   thisa.appendChild(thissite);
   thisa.appendChild(document.createElement("br"));

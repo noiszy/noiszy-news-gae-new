@@ -156,7 +156,37 @@ def get_random_homepage(exclude=None):
 #
 #     return new_url
 
+def create_nni_obj(
+        url=None,
+        page_title=None,
+        site=None,
+        site_title=None,
+        from_page=None,
+        next_link=None,
+        error=None
+    ):
+    if error:
+        url = error
+        page_title = error
+        site = error
+        site_title = error
+        from_page = error
 
+    item = {
+        # 'url': new_url,
+        'url': url,
+        'page_title': page_title,
+        'site': site,
+        'site_title': site_title,
+        'next_link': next_link,
+        'from_page': from_page
+    }
+    return item
+
+
+
+#####
+# change this to use create_nni_obj
 def create_json(
         url=None,
         page_title=None,
