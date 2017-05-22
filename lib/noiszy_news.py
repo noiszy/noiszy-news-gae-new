@@ -34,7 +34,7 @@ def get_nn_item(url, from_page, exclude=None):
         # Check for errors
         if (next_link['error']):
             print "ERROR GETTING HREF FROM %s" % url
-            print next_link.error
+            # print next_link.error
             return {
                 'url':url,
                 'title': None,

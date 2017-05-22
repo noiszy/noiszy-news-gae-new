@@ -306,87 +306,99 @@ def ajax_news_5(max_results=10,news=None):
         # Get a random URL from that page to work with, assign to new_url
         # new_url = noiszy_news.get_random_url_from_page(current_page)
 
-        # just get an nni to make this easier:
+        # set up base values:
+        from_page = "start new site"
+        i = 0
+        nni_list = []
 
-        nni_hp = noiszy_news.get_nn_item(
-            url=current_page,
-            from_page="start new site",
-            exclude=[]
-        )
+        # start loop
+        while i < int(max_results):
 
-        print "got nni from hp"
-        print nni_hp
+            print "starting loop, i = %s" % i
 
-        # nn = nni_hp['next_page']
-        # print "next_page from that = nn"
-        # print nn
-
-        # nn = noiszy_news.get_random_url_from_page(current_page)
-        # print "got nn.get_random_url_from_page:"
-        # print nn
-
-        # check for errors
-        # if nn['error']:
-        if nni_hp['error']:
-            # while debugging, go ahead and return this and print out the error
-            # if not debugging, should just do nothing with return values like this
-
-            # print "##### got errormessage: %s #####" % nn['error']
-            print "##### got errormessage: %s #####" % nni_hp['error']
-            errormsg = "couldn't get link on homepage %s " % current_page
-            # return [nn_utils.create_json(error=errormsg)]
-            nni_obj1 = nn_utils.create_nni_obj(error=errormsg)
-            nni_list = [nni_obj1]
-            nni_list_json = json.dumps(nni_list)
-            return nni_list_json
-
-
-        else:
-            # new_url = nn['new_url']
-            # current_page = nn['url'] # redundant
-            new_url = nni_hp['next_page']
-            current_page = nni_hp['url'] # redundant
-            # print("new_url: ",new_url)
-
-            # if new_url:
-            print "was able to get a url from the page"
-            # Get the new_url, store as current_page
-            # current_page = new_url
-            print("current page: ",current_page)
-            print("new_url: ",new_url)
-
-            # now we have the url of a page linked to from the home page
-            # but we need the content of that page to create the news item.
-            # so, get the content of that page now.
-
-
-            #####
-            # need to split out function to get page contents, and one to get a random link
-            # can wrap both of those up togehter
-            # add to functions: success param, or "# of hrefs" - something to trigger error sfrom
-
-            # nni = noiszy_news.get_nn_item(current_page,nn['url'])
-            nni = noiszy_news.get_nn_item(new_url,current_page)
-
-            nni_obj1 = nn_utils.create_nni_obj(
-                url=nni['url'],
-                page_title=nni['title'],
-                site=current_site,
-                site_title=current_site_title,
-                next_link=nni['next_page'],
-                from_page=nni['from_page']
+            # get an nni from the current page:
+            nni = noiszy_news.get_nn_item(
+                url=current_page,
+                from_page=from_page,
+                exclude=[]
             )
 
+            print "got nni from current_page"
+            print nni
 
-            #######
-            # SEND BACK MULTIPLE ONES
+            # check for errors
+            # if nn['error']:
+            if nni['error']:
+                # while debugging, go ahead and return this and print out the error
+                # if not debugging, should just do nothing with return values like this
 
-            # print "nni_json: %s" % nni_json
-            nni_list = [nni_obj1]
-            print "nni_list: %s" % nni_list
-            nni_list_json = json.dumps(nni_list)
-            print "nni_list_json: %s" % nni_list_json
-            return nni_list_json
+                # print "##### got errormessage: %s #####" % nn['error']
+                print "##### got errormessage: %s #####" % nni['error']
+                errormsg = "couldn't get link on homepage %s " % current_page
+                # return [nn_utils.create_json(error=errormsg)]
+                nni_obj1 = nn_utils.create_nni_obj(error=errormsg)
+                nni_list.append(nni_obj1)
+                # nni_list = [nni_obj1]
+                # nni_list_json = json.dumps(nni_list)
+                # return nni_list_json
+
+                # end the loop
+                i = max_results
+
+
+            else:
+                # # new_url = nn['new_url']
+                # # current_page = nn['url'] # redundant
+                # new_url = nni_hp['next_page']
+                # current_page = nni_hp['url'] # redundant
+                # # print("new_url: ",new_url)
+                #
+                # # if new_url:
+                # print "was able to get a url from the page"
+                # # Get the new_url, store as current_page
+                # # current_page = new_url
+                # print("current page: ",current_page)
+                # print("new_url: ",new_url)
+                #
+                # # now we have the url of a page linked to from the home page
+                # # but we need the content of that page to create the news item.
+                # # so, get the content of that page now.
+                #
+                #
+                # #####
+                # # need to split out function to get page contents, and one to get a random link
+                # # can wrap both of those up togehter
+                # # add to functions: success param, or "# of hrefs" - something to trigger error sfrom
+                #
+                # # nni = noiszy_news.get_nn_item(current_page,nn['url'])
+                # nni = noiszy_news.get_nn_item(new_url,current_page)
+
+                # good result, so create & add it to the list of pages
+                nni_obj1 = nn_utils.create_nni_obj(
+                    url=nni['url'],
+                    page_title=nni['title'],
+                    site=current_site,
+                    site_title=current_site_title,
+                    next_link=nni['next_page'],
+                    from_page=nni['from_page']
+                )
+
+                # print "nni_json: %s" % nni_json
+                nni_list.append(nni_obj1)
+                # nni_list = [nni_obj1]
+                print "nni_list: %s" % nni_list
+                # nni_list_json = json.dumps(nni_list)
+                # print "nni_list_json: %s" % nni_list_json
+
+                # when done with item, swap out values
+                current_page = nni['next_page']
+                from_page = nni['url']
+
+                i = i+1
+
+        # when done with the list, return
+        nni_list_json = json.dumps(nni_list)
+        return nni_list_json
 
 
 
