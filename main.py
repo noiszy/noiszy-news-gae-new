@@ -397,9 +397,9 @@ def ajax_news_5(max_results=10,news=None):
                 i = i+1
 
         # when done with the list, return
-        nni_list_json = json.dumps(nni_list)
-        return nni_list_json
-
+        # nni_list_json = json.dumps(nni_list)
+        # return nni_list_json
+        return nn_utils.create_json_response(nni_list)
 
 
     except ValueError:

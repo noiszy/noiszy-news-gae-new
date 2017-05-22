@@ -222,3 +222,10 @@ def create_json(
 
     return json_item
 
+def create_json_response(array):
+    length = len(array)
+    return_array = {
+        'length': length,
+        'items': array
+    }
+    return json.dumps(return_array)

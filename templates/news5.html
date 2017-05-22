@@ -42,8 +42,8 @@
                         var response;
 
 
-
-
+                        var nni_items_length = json_collection['length'];
+                        nni_items = json_collection['items'];
 
                         // OK THIS WORKS!
                         // NOW JUST SEND BACK MULTIPLE ONES
@@ -51,8 +51,10 @@
                         //for (response in collection) {
 //                        for (j in collection) {
 //                        for (var j = 0; j < collection.length; j++){
-                        for (var j = 0; j < json_collection.length; j++){
-                            response = json_collection[j];
+//                        for (var j = 0; j < json_collection.length; j++){
+//                            response = json_collection[j];
+                        for (var j = 0; j < nni_items_length; j++){
+                            response = nni_items[j];
 
                             console.log("LOOPING OVER COLLECTION");
                             console.log(response);
