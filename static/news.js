@@ -21,7 +21,7 @@ function write_news_item(site, title, link, divId, fromPage, siteTitle, i) {
 //  thiswrapper.setAttribute("data-id",thisid);
 
   thisa = document.createElement("a");
-  thisa.setAttribute("href", "link");
+  thisa.setAttribute("href", link);
 
   thistitle = document.createElement("span");
   thistitle.setAttribute("class", "href-title");

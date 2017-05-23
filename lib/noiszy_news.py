@@ -5,6 +5,8 @@ from lxml import html
 import requests
 from urlparse import urljoin
 
+import noiszy_news_object
+
 import nn_utils
 
 
@@ -16,6 +18,10 @@ import nn_utils
 
 def get_nn_item(url, from_page, exclude=None):
     print "in get_nn_item for %s, from_page %s" % (url, from_page)
+
+    this_nno = noiszy_news_object.NNO(url)
+    this_nno.printMe()
+
     try:
         page = requests.get(url)
         # print "got page"

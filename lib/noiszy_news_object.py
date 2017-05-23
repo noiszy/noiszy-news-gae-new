@@ -1,9 +1,10 @@
 
+class NNO(object):
 
-class nno(object):
+    def __init__(self, url):
+        self.url = url
 
-    def __init__(self):
-        self.tangerine = "And now a thousand years between"
-
-    def apple(self):
-        print "I AM CLASSY APPLES!"
+    def printMe(self):
+        print
+        print "this nno url is: %s" % self.url
+        print
