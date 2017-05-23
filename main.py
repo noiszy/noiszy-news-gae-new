@@ -10,6 +10,8 @@ import json
 import time
 import noiszy_news
 import nn_utils
+import noiszy_news_object
+
 
 #####
 # implement this fix:
