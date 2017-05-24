@@ -71,6 +71,7 @@ function write_news_wrapper(total_num_results) {
 
     // anything we want to set up goes here...
     window.nn_counter = 0;
+    window.nn_include_errors = false;
 
     // now call the function to write the news items, passing the max # of results
     write_news(total_num_results);
@@ -137,6 +138,9 @@ function write_news(total_num_results) {
             console.log("still not enough!");
             console.log("need "+total_num_results);
             console.log("only have " + window.nn_results);
+
+            // remaining_results = total_num_results - window.nn_results;
+            // $("#loading").innerHTML = "Loading " + remaining_results + " more scraped news stories...this may take some time.<br>";
 
             write_news(total_num_results);
         } else {

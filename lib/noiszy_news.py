@@ -23,6 +23,7 @@ def get_nn_item(url, from_page, exclude=None):
     this_nno.printMe()
 
     try:
+
         page = requests.get(url)
         # print "got page"
         tree = html.fromstring(page.content)
@@ -80,7 +81,10 @@ def get_nn_item(url, from_page, exclude=None):
         }
 
 def get_title_from(tree):
-    return tree.xpath("//title/text()")[0]
+    try:
+        return tree.xpath("//title/text()")[0]
+    except:
+        return "(No title)"
 
 
 
@@ -122,14 +126,6 @@ def get_random_url(current_url, list_of_links, exclude=None):
 
         chosen = urljoin(current_url,chosen)
 
-        # if "http" in chosen:
-        #     print("returning get_random_url: ",chosen)
-        #     return chosen
-        # else:
-        #     # see https://docs.python.org/2/library/urlparse.html
-        #     print("returning get_random_url: ",protocol_and_domain + chosen)
-        #     return chosen
-
         return chosen
 
     else:
@@ -138,23 +134,13 @@ def get_random_url(current_url, list_of_links, exclude=None):
 
 
 def get_list_of_links(tree,url):
-    # not([href*='live']):not([href*='stream']):not([href*='/go2']):not([href*='video'])
-    # return tree.xpath("//a[contains(@href,'/') and not(contains(@href,'//'))]/@href")  #  a hrefs
-    # return tree.xpath("//a[contains(@href,'/') and not(contains(@href,'//'))] and not(contains(@href,'stream'))] and not(contains(@href,'live'))] and not(contains(@href,'/go2'))] and not(contains(@href,'video'))]/@href")  #  a hrefs
 
     #####
     # FIX THIS.  We should allow any links to the current domain, even if domain is explicitly defined in link (currently being excepted by '//')
 
     print "in get_list_of_links"
 
-    # print "xpath"
-    # print tree.xpath("//a[@href]/@href")  #  a hrefs
-
     xp = nn_utils.get_xpath()
-    # print tree.xpath("//a[contains(@href,'/') and not(contains(@href,'//')) and not(contains(@href,'stream')) and not(contains(@href,'live')) and not(contains(@href,'/go2')) and not(contains(@href,'video'))]/@href")  #  a hrefs
-    # return tree.xpath("//a[contains(@href,'/') and not(contains(@href,'//')) and not(contains(@href,'stream')) and not(contains(@href,'live')) and not(contains(@href,'/go2')) and not(contains(@href,'video'))]/@href")  #  a hrefs
-
-    # print "xp : %s" % xp
 
     return tree.xpath(xp)
 
