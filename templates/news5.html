@@ -19,7 +19,7 @@
 
                 //clear div contents
 
-                $(function (i) {
+                $(function function_name(i) {
 
                     // get a whole site's worth of news
                     // response will contain a collection of items
@@ -27,6 +27,8 @@
                     //for now: leave this as a constant, but it should be the max remaining results
                     var max_results = 4
                     console.log("max_results: ",max_results)
+
+                    //call the python function via URL - /ajax/news5
                     $("<div>").load("/ajax/news5/"+max_results, function (collection) {
 
                         console.log("collection");
@@ -40,7 +42,6 @@
                         console.log(json_collection[0]);
 
                         var response;
-
 
                         var nni_items_length = json_collection['length'];
                         nni_items = json_collection['items'];
@@ -83,18 +84,7 @@
                                 i = i
                             );
 
-                            // display the response, and
-                            // store the next_url so we can pass it next
-
-
-                            //                        alert(this);
-                            //                        console.log("JSON ",i,": ")
-                            //                        console.log(this)
-                            //                        console.log("parseJSON ",i,": ",JSON.parse(this))
-
-
-                            //                        $("#content").append($(this).html());
-                            //clear div contents
+                            // should probably move this outside the loop
                             $("#loading").empty();
 
                         }
