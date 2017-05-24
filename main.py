@@ -329,51 +329,20 @@ def ajax_news_5(max_results=10,news=None):
             print nni
 
             # check for errors
-            # if nn['error']:
             if nni['error']:
                 # while debugging, go ahead and return this and print out the error
                 # if not debugging, should just do nothing with return values like this
 
-                # print "##### got errormessage: %s #####" % nn['error']
                 print "##### got errormessage: %s #####" % nni['error']
                 errormsg = "couldn't get link on homepage %s " % current_page
-                # return [nn_utils.create_json(error=errormsg)]
                 nni_obj1 = nn_utils.create_nni_obj(error=errormsg)
                 nni_list.append(nni_obj1)
-                # nni_list = [nni_obj1]
-                # nni_list_json = json.dumps(nni_list)
-                # return nni_list_json
 
                 # end the loop
                 i = max_results
 
 
             else:
-                # # new_url = nn['new_url']
-                # # current_page = nn['url'] # redundant
-                # new_url = nni_hp['next_page']
-                # current_page = nni_hp['url'] # redundant
-                # # print("new_url: ",new_url)
-                #
-                # # if new_url:
-                # print "was able to get a url from the page"
-                # # Get the new_url, store as current_page
-                # # current_page = new_url
-                # print("current page: ",current_page)
-                # print("new_url: ",new_url)
-                #
-                # # now we have the url of a page linked to from the home page
-                # # but we need the content of that page to create the news item.
-                # # so, get the content of that page now.
-                #
-                #
-                # #####
-                # # need to split out function to get page contents, and one to get a random link
-                # # can wrap both of those up togehter
-                # # add to functions: success param, or "# of hrefs" - something to trigger error sfrom
-                #
-                # # nni = noiszy_news.get_nn_item(current_page,nn['url'])
-                # nni = noiszy_news.get_nn_item(new_url,current_page)
 
                 # good result, so create & add it to the list of pages
                 nni_obj1 = nn_utils.create_nni_obj(
@@ -385,22 +354,23 @@ def ajax_news_5(max_results=10,news=None):
                     from_page=nni['from_page']
                 )
 
-                # print "nni_json: %s" % nni_json
                 nni_list.append(nni_obj1)
-                # nni_list = [nni_obj1]
                 print "nni_list: %s" % nni_list
-                # nni_list_json = json.dumps(nni_list)
-                # print "nni_list_json: %s" % nni_list_json
 
                 # when done with item, swap out values
                 current_page = nni['next_page']
                 from_page = nni['url']
 
-                i = i+1
+                # roll the dice to see if we're going to get a new item or return
+                dice = random.randint(0, 3)
+                if (dice == 0):
+                    # get out
+                    i = max_results
+                else:
+                    # just increment & move on
+                    i = i+1
 
         # when done with the list, return
-        # nni_list_json = json.dumps(nni_list)
-        # return nni_list_json
         return nn_utils.create_json_response(nni_list)
 
 
